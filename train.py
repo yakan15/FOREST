@@ -149,7 +149,7 @@ def eval_epoch(model, validation_data, crit):
         n_words = gold.data.ne(Constants.PAD).sum().float()
         n_total_words += n_words
         n_total_correct += n_correct
-        total_loss += loss.data[0]
+        total_loss += loss.item()
 
         pred_ids, pred_probs = model(tgt,RL_train=True)
 
