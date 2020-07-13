@@ -201,7 +201,7 @@ def test_epoch(model, test_data, opt, k_list=[1,5,10,20,50,100]):
     for k in k_list:
         scores['hits@' + str(k)] = scores['hits@' + str(k)] / n_total_words
         scores['map@' + str(k)] = scores['map@' + str(k)] / n_total_words
-    return scores, reward / batch_num if opt else 0
+    return scores, reward / batch_num if opt.rl else 0
 
 def train(model, training_data, validation_data, test_data, crit, optimizer, opt):
     ''' Start training '''
