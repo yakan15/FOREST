@@ -224,7 +224,7 @@ def train(model, training_data, validation_data, test_data, crit, optimizer, opt
     for epoch_i in range(opt.epoch):
         print('[ Epoch', epoch_i, ']')
 
-        if epoch_i<opt.warmup:
+        if not opt.rl or epoch_i<opt.warmup:
             RL_setting = False
         else:
             RL_setting = True
@@ -291,6 +291,7 @@ def main():
 
     #parser.add_argument('-d_word_vec', type=int, default=512)
     parser.add_argument('-d_model', type=int, default=64)
+    parser.add_argument('-rl', action='store_true')
     parser.add_argument('-d_inner_hid', type=int, default=64)
 
     parser.add_argument('-n_warmup_steps', type=int, default=1000)
