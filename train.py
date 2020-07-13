@@ -229,7 +229,6 @@ def train(model, training_data, validation_data, test_data, crit, optimizer, opt
             RL_setting = False
         else:
             RL_setting = True
-        print("rl", RL_setting)
 
         start = time.time()
         train_loss, train_accu, expect, reward = train_epoch(model, training_data, crit, optimizer,RL_setting,expect)
