@@ -121,7 +121,7 @@ def train_epoch(model, training_data, crit, optimizer,RL_setting,expect,):
 
     return total_loss/n_total_words, n_total_correct/n_total_words, expect_new/batch_num, reward/batch_num
 
-def eval_epoch(model, validation_data, crit):
+def eval_epoch(model, validation_data, crit, opt):
     ''' Epoch operation in evaluation phase '''
 
     model.eval()
@@ -150,12 +150,12 @@ def eval_epoch(model, validation_data, crit):
         n_total_words += n_words
         n_total_correct += n_correct
         total_loss += loss.item()
+        if opt.lr:
+            pred_ids, pred_probs = model(tgt,RL_train=True)
 
-        pred_ids, pred_probs = model(tgt,RL_train=True)
-
-        # backward
-        loss_rl, expect_batch, reward_batch = get_performance_rl(pred_ids, pred_probs, tgt, expect=0) # with start ids
-        reward += reward_batch
+            # backward
+            loss_rl, expect_batch, reward_batch = get_performance_rl(pred_ids, pred_probs, tgt, expect=0) # with start ids
+            reward += reward_batch
         batch_num += tgt.size(0)
 
     return total_loss/n_total_words, n_total_correct/n_total_words, reward/batch_num
@@ -240,7 +240,7 @@ def train(model, training_data, validation_data, test_data, crit, optimizer, opt
 
         # validation
         start = time.time()
-        valid_loss, valid_accu, reward = eval_epoch(model, validation_data, crit)
+        valid_loss, valid_accu, reward = eval_epoch(model, validation_data, crit, opt)
         print('  - (Validation) ppl: {ppl: 8.5f}, accuracy: {accu:3.3f} %, Reward: {rwd:3.8f} , '\
                 'elapse: {elapse:3.3f} min'.format(
                     ppl=math.exp(min(valid_loss, 100)), accu=100*valid_accu, rwd=reward,
