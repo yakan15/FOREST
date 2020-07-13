@@ -117,7 +117,7 @@ def train_epoch(model, training_data, crit, optimizer,RL_setting,expect,):
 
         # note keeping
         n_total_correct += n_correct
-        total_loss += loss.data[0]
+        total_loss += loss.item()
 
     return total_loss/n_total_words, n_total_correct/n_total_words, expect_new/batch_num, reward/batch_num
 
