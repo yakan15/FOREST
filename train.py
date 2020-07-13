@@ -160,7 +160,7 @@ def eval_epoch(model, validation_data, crit):
 
     return total_loss/n_total_words, n_total_correct/n_total_words, reward/batch_num
 
-def test_epoch(model, test_data, k_list=[1,5,10,20,50,100]):
+def test_epoch(model, test_data, opt, k_list=[1,5,10,20,50,100]):
     ''' Epoch operation in evaluation phase '''
 
     model.eval()
@@ -190,17 +190,18 @@ def test_epoch(model, test_data, k_list=[1,5,10,20,50,100]):
             scores['hits@' + str(k)] += scores_batch['hits@' + str(k)] * scores_len
             scores['map@' + str(k)] += scores_batch['map@' + str(k)] * scores_len        
 
-        pred_ids, pred_probs = model(tgt,RL_train=True)
+        if opt.rl:
+            pred_ids, pred_probs = model(tgt,RL_train=True)
 
-        for i in range(10):
-            loss_rl, expect_batch, reward_batch = get_performance_rl(pred_ids, pred_probs, tgt, expect=0) # with start ids
-            reward += reward_batch
-            batch_num += tgt.size(0)
+            for i in range(10):
+                loss_rl, expect_batch, reward_batch = get_performance_rl(pred_ids, pred_probs, tgt, expect=0) # with start ids
+                reward += reward_batch
+                batch_num += tgt.size(0)
 
     for k in k_list:
         scores['hits@' + str(k)] = scores['hits@' + str(k)] / n_total_words
         scores['map@' + str(k)] = scores['map@' + str(k)] / n_total_words
-    return scores, reward / batch_num
+    return scores, reward / batch_num if opt else 0
 
 def train(model, training_data, validation_data, test_data, crit, optimizer, opt):
     ''' Start training '''
@@ -254,7 +255,7 @@ def train(model, training_data, validation_data, test_data, crit, optimizer, opt
 
         if epoch_i>=opt.warmup-1 or epoch_i % 5==4:
             # test
-            scores, reward_test = test_epoch(model, test_data)
+            scores, reward_test = test_epoch(model, test_data, opt)
             print('  - (Test) ')
             for metric in scores.keys():
                 print(metric+' '+str(scores[metric]))
