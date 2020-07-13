@@ -150,7 +150,7 @@ def eval_epoch(model, validation_data, crit, opt):
         n_total_words += n_words
         n_total_correct += n_correct
         total_loss += loss.item()
-        if opt.lr:
+        if opt.rl:
             pred_ids, pred_probs = model(tgt,RL_train=True)
 
             # backward
