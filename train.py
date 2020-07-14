@@ -293,6 +293,7 @@ def main():
     #parser.add_argument('-d_word_vec', type=int, default=512)
     parser.add_argument('-d_model', type=int, default=64)
     parser.add_argument('-rl', action='store_true')
+    parser.add_argument('-eos', action='store_true')
     parser.add_argument('-d_inner_hid', type=int, default=64)
 
     parser.add_argument('-n_warmup_steps', type=int, default=1000)
@@ -328,9 +329,9 @@ def main():
     
 
     #========= Preparing DataLoader =========#
-    train_data = DataLoader(opt.data_name, data=0, load_dict=True, batch_size=opt.batch_size, cuda=opt.cuda, loadNE=opt.network)
-    valid_data = DataLoader(opt.data_name, data=1, batch_size=opt.batch_size, cuda=opt.cuda, loadNE=opt.network)
-    test_data = DataLoader(opt.data_name, data=2, batch_size=opt.batch_size, cuda=opt.cuda, loadNE=opt.network)
+    train_data = DataLoader(opt.data_name, data=0, load_dict=True, batch_size=opt.batch_size, cuda=opt.cuda, loadNE=opt.network, with_EOS=opt.eos)
+    valid_data = DataLoader(opt.data_name, data=1, batch_size=opt.batch_size, cuda=opt.cuda, loadNE=opt.network, with_EOS=opt.eos)
+    test_data = DataLoader(opt.data_name, data=2, batch_size=opt.batch_size, cuda=opt.cuda, loadNE=opt.network, with_EOS=opt.eos)
 
     opt.user_size = train_data.user_size
     if opt.network:
