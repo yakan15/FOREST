@@ -18,6 +18,13 @@ class Options(object):
         #test file path.
         self.test_data = 'data/'+data_name+'/cascadetest.txt'
 
+        # print("#chronological setting") 
+        # self.train_data = 'data/'+data_name+'/chronogical.txt'
+        # #valid file path.
+        # self.valid_data = 'data/'+data_name+'/chronogicalvalid.txt'
+        # #test file path.
+        # self.test_data = 'data/'+data_name+'/chronogicaltest.txt'
+
         self.u2idx_dict = 'data/'+data_name+'/u2idx.pickle'
 
         self.idx2u_dict = 'data/'+data_name+'/idx2u.pickle'
